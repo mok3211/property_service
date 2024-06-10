@@ -1,5 +1,5 @@
 import os
-from docx import Document
+from docxtpl import DocxTemplate
 
 
 current_path = os.path.abspath(__file__)
@@ -22,9 +22,13 @@ class GenerateWorld(object):
 
     def start_generate_world(self, data) -> bool:
         # 根据文档位置加载数据并生成副本后保存文档
-        now_docx = Document(docx_template_path)
-        
-
-
+        now_docx = DocxTemplate(docx_template_path)
+        context = self.generate_context(data)
+        now_docx.render(context)
+        now_docx.save("")
         return True
+    
+    def generate_context(self, data) -> dict:
+        context = {}
         
+        return context
