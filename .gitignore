@@ -1,2 +1,3 @@
 service/docx_template/*
 __pycache__
+.venv/*
