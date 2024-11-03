@@ -1,0 +1,10 @@
+# 项目配置
+- alembic 
+数据库表设计, 修改alembic.ini配置文件 并执行 
+alembic upgread head
+- fastapi
+pip install fastapi
+fastapi dev main.py
+
+- postgres
+database postgres
