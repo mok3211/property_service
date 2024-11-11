@@ -7,6 +7,7 @@ def login():
 
 @app.post("/register")
 def register():
+    
     # 注册信息
     return {"success": "ok"}
 
