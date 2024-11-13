@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from models.Tokens import Token
 from service.user_service import UserService
-from utils.token_utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+from utils.token_utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from ..main import app
 from pydantic import BaseModel, ValidationError
 from typing import List, Union
@@ -25,7 +25,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
     
 
 @app.post("/register")
-def register(form_data: OAuth2PasswordRequestForm):
+def register(form_data: OAuth2PasswordRequestForm = Depends(get_current_user)):
     # 注册信息
     user_service = UserService()
     user = user_service.create_user(form_data.username, form_data.password)
@@ -34,7 +34,7 @@ def register(form_data: OAuth2PasswordRequestForm):
     return {"success": "User registered successfully"}
 
 @app.post("/change_password")
-def change_password(form_data: OAuth2PasswordRequestForm = Depends()):
+def change_password(form_data: OAuth2PasswordRequestForm = Depends(get_current_user)):
      # 修改密码信息
     user_service = UserService()
     user = user_service.authenticate_user(form_data.username, form_data.password)
