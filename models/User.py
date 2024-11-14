@@ -2,7 +2,9 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, Enum
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
 import enum
-from werkzeug.security import generate_password_hash, check_password_hash
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 Base = declarative_base()
 
@@ -56,7 +58,7 @@ class User(Base):
     @password.setter
     def password(self, password):
         """设置密码，自动进行加密"""
-        self._password = generate_password_hash(password)
+        self._password = pwd_context.hash(password)
 
     def verify_password(self, password):
         """验证密码
@@ -67,7 +69,7 @@ class User(Base):
         Returns:
             bool: 密码是否正确
         """
-        return check_password_hash(self._password, password)
+        return pwd_context.verify(self._password, password)
 
     def update_login_info(self, success=True):
         """更新登录信息

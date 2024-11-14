@@ -25,7 +25,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
     
 
 @app.post("/register")
-def register(form_data: OAuth2PasswordRequestForm = Depends(get_current_user)):
+def register(form_data: OAuth2PasswordRequestForm = Depends()):
     # 注册信息
     user_service = UserService()
     user = user_service.create_user(form_data.username, form_data.password)
@@ -58,15 +58,9 @@ async def forgot_password(email: str):
     return {"success": "Password reset email sent"}
 
 @app.post("/reset_password")
-async def reset_password(token: str, new_password: str):
+async def reset_password(new_password: str, user: OAuth2PasswordRequestForm = Depends(get_current_user)):
     # 处理重置密码请求
     user_service = UserService()
-    
-    # 验证重置令牌并获取用户
-    user = user_service.verify_reset_token(token)
-    if not user:
-        raise HTTPException(status_code=400, detail="Invalid or expired token")
-
     # 更新用户密码
     user_service.update_password(user, new_password)
     return {"success": "Password has been reset successfully"}

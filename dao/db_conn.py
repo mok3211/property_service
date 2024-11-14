@@ -19,7 +19,7 @@ class DBConnection:
             cls._instance = super(DBConnection, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, db_url="sqlite:///database.db"):
+    def __init__(self):
         config = ConfigParser()
         config_path = os.path.join("conf", "conf.ini")
         config.read(config_path)
@@ -34,22 +34,21 @@ class DBConnection:
             )
             self._SessionFactory = scoped_session(sessionmaker(bind=self._engine))
 
-    def session_decorator(self):
-        def decorator(func):
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                session = self._SessionFactory()
-                try:
-                    kwargs['session'] = session
-                    result = func(*args, **kwargs)
-                    session.commit()
-                    return result
-                except Exception as e:
-                    session.rollback()
-                    raise e
-                finally:
-                    session.close()
-            return wrapper
-        return decorator
+
+def session_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        session = DBConnection()._SessionFactory
+        try:
+            kwargs['session'] = session
+            result = func(*args, **kwargs)
+            session.commit()
+            return result
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+    return wrapper
 
 
