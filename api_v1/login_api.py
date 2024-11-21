@@ -2,7 +2,7 @@ from datetime import timedelta
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
-from models.Tokens import Token
+from po.Tokens import Token
 from service.user_service import UserService
 from utils.token_utils import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, get_current_user
 from ..main import app

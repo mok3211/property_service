@@ -6,7 +6,7 @@ from fastapi.security import (
     OAuth2PasswordRequestForm,
     SecurityScopes,
 )
-from models.Tokens import TokenData
+from po.Tokens import TokenData
 from service.user_service import UserService
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="login",
